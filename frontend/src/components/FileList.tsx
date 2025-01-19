@@ -79,14 +79,16 @@ export const FileList: React.FC<FileListProps> = ({ files, onDownload, onShare, 
                     >
                       <Download className="h-5 w-5" />
                     </button>
-                    
-                     <button
+                    {/* 
+                    <button
                       onClick={() => setSharingFileId(file.id)}
                       className="p-2 text-gray-400 hover:text-gray-500 rounded-full hover:bg-gray-100"
                       title="Share"
                     >
                       <Share2 className="h-5 w-5" />
                     </button> 
+                    */}
+                     
 
                     <button
                       onClick={() => setDeletingFileId(file.id)}
