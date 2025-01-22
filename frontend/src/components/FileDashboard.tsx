@@ -90,6 +90,14 @@ export const FileDashboard = () => {
   };
 
   const handleShare = async (fileId: string, email: string) => {
+    const userData = localStorage.getItem('user');
+    const user = userData ? JSON.parse(userData) : null;
+    const userId = user ? user.id : null;
+
+    if (!userId) {
+      console.error('User ID not found in local storage');
+      return; // or handle the error as needed
+    }
     try {
       await fetch(`${URL}/api/files/${fileId}/share`, {
         method: 'POST',
@@ -97,7 +105,7 @@ export const FileDashboard = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, accessType: 'READ' })
+        body: JSON.stringify({ email, accessType: 'READ' , userId })
       });
     } catch (error) {
       console.error('Share failed:', error);

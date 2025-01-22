@@ -161,7 +161,7 @@ export const uploadFileWithEncryption = async (req: Request, res: Response) : Pr
     }
   };
 
-  export const shareFile = async (req: Request, res: Response) => {
+  export const shareFile = async (req: Request, res: Response) : Promise<any> => {
     const fileId = req.params.fileId;
     const { email, accessType } = req.body;
   
