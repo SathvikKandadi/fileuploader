@@ -82,7 +82,8 @@ const AuthPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Secure Cloud Storage</h1>
+      <h1 className="text-2xl font-bold mb-4">File Flow A Secure Cloud Storage</h1>
+      <h1 className="text-xl  mb-4">A Secure Cloud Storage platform</h1>
       <p className="mb-6 text-gray-600">
         {isLogin 
           ? 'Welcome back! Please login to your account.' 

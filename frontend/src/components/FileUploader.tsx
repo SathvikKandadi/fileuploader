@@ -80,9 +80,14 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) =
   return (
     <div className="mb-6">
       <div
-        className={`relative border-2 border-dashed rounded-lg p-6 text-center
-          ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}
-          ${uploading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-all duration-300 ease-in-out
+          ${dragActive 
+            ? 'border-purple-500 bg-purple-50 shadow-lg' 
+            : 'border-indigo-300 bg-gradient-to-br from-blue-50 to-purple-50'}
+          ${uploading 
+            ? 'opacity-60 cursor-not-allowed' 
+            : 'cursor-pointer hover:shadow-xl hover:border-indigo-400'}
+          ${selectedFile ? 'border-green-400 bg-green-50' : ''}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
@@ -97,27 +102,42 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) =
           disabled={uploading}
         />
         
-        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+        <Upload 
+          className={`mx-auto h-16 w-16 transition-colors duration-300 
+            ${dragActive ? 'text-purple-500' : 'text-indigo-400'}
+            ${uploading ? 'animate-pulse' : ''}
+            ${selectedFile ? 'text-green-500' : ''}`} 
+        />
         
-        <p className="mt-2 text-sm text-gray-600">
-          {uploading ? 'Uploading...' : 'Drag and drop a file or click to select'}
+        <p className={`mt-4 text-md font-medium transition-colors duration-300
+          ${dragActive ? 'text-purple-700' : 'text-indigo-600'}
+          ${uploading ? 'text-gray-500' : ''}
+          ${selectedFile ? 'text-green-700' : ''}`}>
+          {uploading 
+            ? 'Uploading...' 
+            : selectedFile 
+              ? 'File Selected' 
+              : 'Drag and drop a file or click to select'}
         </p>
         
         {selectedFile && (
-          <div className="mt-4 flex items-center justify-center gap-2">
-            <span className="text-sm text-gray-600">{selectedFile.name}</span>
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <span className="text-sm text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">
+              {selectedFile.name}
+            </span>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 clearSelectedFile();
               }}
-              className="p-1 hover:bg-gray-100 rounded"
+              className="p-2 hover:bg-red-50 rounded-full hover:text-red-500 transition-colors"
             >
-              <X className="h-4 w-4 text-gray-500" />
+              <X className="h-5 w-5 text-indigo-500" />
             </button>
           </div>
         )}
       </div>
     </div>
   );
+ 
 };

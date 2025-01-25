@@ -2,6 +2,7 @@ import  { useState, useEffect } from 'react';
 import { FileUploader } from './FileUploader';
 import { FileList } from './FileList';
 import { URL } from '../utils/url';
+import { FileListImproved } from './FileListImproved';
 
 interface File {
   id: string;
@@ -139,11 +140,11 @@ export const FileDashboard = () => {
   return (
     <div className="p-4">
       <FileUploader onUploadSuccess={handleUploadSuccess} />
-      <FileList
-        files={files}
-        onDownload={handleDownload}
-        onShare={handleShare}
-        onDelete={handleDelete}
+      <FileListImproved
+      files={files}
+      onDownload={handleDownload}
+      onShare={handleShare}
+      onDelete={handleDelete}
       />
     </div>
   );
