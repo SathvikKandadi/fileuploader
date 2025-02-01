@@ -137,26 +137,43 @@ export const uploadFileWithEncryption = async (req: Request, res: Response) : Pr
 
   export const deleteFile = async (req: Request, res: Response) : Promise<any> => {
     const fileId = req.params.fileId;
+    const userId = req.body.userId;
+
     try {
+      // First check if the file exists and get owner information
       const file = await prisma.file.findUnique({
-        where: { id: fileId, ownerId: req.body.userId }
+        where: { id: fileId },
+        include: { 
+          owner: true,
+          sharedWith: true // Include shared access records
+        }
       });
-  
+
       if (!file) {
         return res.status(404).json({ message: 'File not found' });
       }
-  
+
+      // Check if the user is the owner
+      if (file.ownerId !== userId) {
+        return res.status(403).json({ message: 'You do not have permission to delete this file' });
+      }
+
+      // First delete all FileAccess records
+      await prisma.fileAccess.deleteMany({
+        where: { fileId: file.id }
+      });
+
       // Delete from S3
-    //   const key = `${req.body.userId}/${file.key}`;
       await deleteFileService(file.key);
-  
-      // Delete from database
+
+      // Finally delete the file record
       await prisma.file.delete({
         where: { id: fileId }
       });
-  
+
       res.status(200).json({ message: 'File deleted successfully' });
     } catch (error) {
+      console.error('Delete error:', error);
       res.status(500).json({ message: (error as Error).message });
     }
   };

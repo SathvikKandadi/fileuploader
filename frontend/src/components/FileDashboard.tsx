@@ -10,6 +10,7 @@ interface File {
   type: string;
   size: number;
   createdAt: string;
+  ownerId: string;
 }
 
 export const FileDashboard = () => {
@@ -114,13 +115,30 @@ export const FileDashboard = () => {
   };
 
   const handleDelete = async (fileId: string) => {
+    const userData = localStorage.getItem('user');
+    const user = userData ? JSON.parse(userData) : null;
+    const userId = user ? user.id : null;
+
+    if (!userId) {
+      console.error('User ID not found in local storage');
+      return;
+    }
+
     try {
       const response = await fetch(`${URL}/api/files/${fileId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId })
       });
+
+      if (response.status === 403) {
+        // Handle permission denied
+        alert('You do not have permission to delete this file');
+        return;
+      }
 
       if (!response.ok) {
         throw new Error('Delete failed');
@@ -130,6 +148,7 @@ export const FileDashboard = () => {
       setFiles(files.filter(file => file.id !== fileId));
     } catch (error) {
       console.error('Delete failed:', error);
+      alert('Failed to delete file. Please try again.');
     }
   };
 

@@ -7,6 +7,7 @@ interface File {
   type: string;
   size: number;
   createdAt: string;
+  ownerId: string;
 }
 
 interface FileListProps {
@@ -101,13 +102,15 @@ export const FileListImproved: React.FC<FileListProps> = ({ files, onDownload, o
                     >
                       <Share2 className="h-5 w-5" />
                     </button> 
-                    <button
-                      onClick={() => setDeletingFileId(file.id)}
-                      className="p-2 text-red-400 hover:text-red-600 rounded-full hover:bg-red-100 transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
+                    {file.ownerId === JSON.parse(localStorage.getItem('user') || '{}').id && (
+                      <button
+                        onClick={() => setDeletingFileId(file.id)}
+                        className="p-2 text-red-400 hover:text-red-600 rounded-full hover:bg-red-100 transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    )}
                   </div>
                 </div>
 
