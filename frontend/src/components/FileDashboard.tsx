@@ -1,8 +1,11 @@
 import  { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FileUploader } from './FileUploader';
 import { FileList } from './FileList';
 import { URL } from '../utils/url';
 import { FileListImproved } from './FileListImproved';
+import { User } from 'lucide-react';
+import { Navbar } from './Navbar';
 
 interface File {
   id: string;
@@ -16,6 +19,7 @@ interface File {
 export const FileDashboard = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFiles();
@@ -140,10 +144,6 @@ export const FileDashboard = () => {
         return;
       }
 
-      if (!response.ok) {
-        throw new Error('Delete failed');
-      }
-
       // Update local state to remove the deleted file
       setFiles(files.filter(file => file.id !== fileId));
     } catch (error) {
@@ -152,19 +152,32 @@ export const FileDashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    navigate('/'); // Redirect to home page
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  const userData = localStorage.getItem('user');
+  const user = userData ? JSON.parse(userData) : null;
+  const email = user ? user.email : '';
+
   return (
-    <div className="p-4">
-      <FileUploader onUploadSuccess={handleUploadSuccess} />
-      <FileListImproved
-      files={files}
-      onDownload={handleDownload}
-      onShare={handleShare}
-      onDelete={handleDelete}
-      />
+    <div className="min-h-screen bg-gray-50">
+      <Navbar email={email} onLogout={handleLogout} />
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <FileUploader onUploadSuccess={handleUploadSuccess} />
+        <FileListImproved
+          files={files}
+          onDownload={handleDownload}
+          onShare={handleShare}
+          onDelete={handleDelete}
+        />
+      </div>
     </div>
   );
 };
